@@ -1,7 +1,8 @@
 <script>
   import { onMount } from "svelte";
   import { base } from "$app/paths";
-  import { getPlace } from "$lib/utils";
+  import { goto } from "$app/navigation";
+  import { regions } from "$lib/config";
   import {
     Header,
     Breadcrumb,
@@ -9,10 +10,10 @@
     Section,
     Highlight,
     Grid,
-    Blockquote,
     Footer,
     Select,
-    Divider,
+    Twisty,
+    Container
   } from "@onsvisual/svelte-components";
   import { Chart } from "@onsvisual/svelte-charts";
 
@@ -22,12 +23,12 @@
 
   async function doSelect(e) {
     let code = typeof e === "string" ? e : e?.detail?.areacd;
-    data.place = await getPlace(`${base}/data/json/${code}.json`);
-    selected = data.places.find(d => d?.areacd === code);
+    selected = null;
+    goto(`${base}/${code}/`);
   }
 
   async function doClear() {
-    data.place = await getPlace(`${base}/data/json/default.json`);
+    goto(`${base}/`);
   }
 
   onMount(() => {
@@ -63,7 +64,7 @@
           mode="search"
           on:change={doSelect}
           on:clear={doClear}
-          placeholder="Select a local authority..."
+          placeholder="Find a local authority..."
         />
       </div>
     </Titleblock>
@@ -81,5 +82,22 @@
     </Section>
   {/if}
 {/each}
+
+<Container marginTop marginBottom>
+  <Twisty title="All versions of this article" open={!data.place.place}>
+    <Grid colwidth="narrow">
+      {#each regions as region}
+      <div>
+        <strong>{region.nm}</strong>
+        <div style:font-size="smaller">
+          {#each data.places.filter(p => p.parentcd === region.cd) as place}
+          <a href="{base}/{place.areacd}/">{place.areanm}</a><br/>
+          {/each}
+        </div>
+      </div>
+      {/each}
+    </Grid>
+  </Twisty>
+</Container>
 
 <Footer theme="dark"/>
