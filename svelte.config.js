@@ -12,6 +12,7 @@ const config = {
 			assets: 'build'
 		}),
 		prerender: {
+			entries: ['/', '/embed'],
 			handleHttpError: 'warn'
 		},
 		paths: {

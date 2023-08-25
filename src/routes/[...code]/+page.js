@@ -1,5 +1,3 @@
-export const prerender = true;
-
 import { base } from "$app/paths";
 import { getPlace } from "$lib/utils";
 

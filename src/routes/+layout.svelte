@@ -3,10 +3,3 @@
 </script>
 
 <slot/>
-
-<style>
-  /* main {
-    max-width: 670px;
-    margin: 0 auto;
-  } */
-</style>
