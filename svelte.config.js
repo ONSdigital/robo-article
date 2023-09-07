@@ -1,6 +1,8 @@
 /** @type {import('@sveltejs/kit').Config} */
 import adapter from '@sveltejs/adapter-static';
 
+export const base = '/robo-article';
+
 const production = process.env.NODE_ENV === 'production';
 
 const config = {
@@ -16,7 +18,8 @@ const config = {
 			handleHttpError: 'warn'
 		},
 		paths: {
-			base: production ? '/robo-article' : ''
+			base: production ? base : '',
+			relative: false
 		}
 	}
 };

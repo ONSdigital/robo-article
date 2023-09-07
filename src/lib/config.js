@@ -42,7 +42,9 @@ export const regions = [
   {cd: "E12000007", nm: "London"},
   {cd: "E12000008", nm: "South East"},
   {cd: "E12000009", nm: "South West"},
-  {cd: "W92000004", nm: "Wales"}
+  {cd: "N92000002", nm: "Northern Ireland"},
+  {cd: "S92000003", nm: "Scotland"},
+  {cd: "W92000004", nm: "Wales"},
 ];
 
 export const colors = {

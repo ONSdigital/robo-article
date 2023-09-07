@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build && node ./scripts/js-fix",
+    "build": "vite build && node ./scripts/js-fix && node ./scripts/gen-sitemap",
     "build-data": "node ./scripts/build-data",
     "package": "vite package",
     "preview": "vite preview",
@@ -17,7 +17,7 @@
   "devDependencies": {
     "@onsvisual/robo-utils": "^0.2.15",
     "@onsvisual/svelte-charts": "^0.2.11",
-    "@onsvisual/svelte-components": "^0.0.15",
+    "@onsvisual/svelte-components": "^0.0.23",
     "@sveltejs/adapter-static": "^2.0.2",
     "@sveltejs/kit": "^1.15.8",
     "d3-dsv": "latest",

@@ -18,10 +18,6 @@
   }
 </script>
 
-<svelte:head>
-  <script src="https://cdn.ons.gov.uk/vendor/pym/1.3.2/pym.min.js"></script>
-</svelte:head>
-
 <Embed>
   {#each [data.place.sections[0]] as section}
   <Highlight height="auto">
@@ -44,16 +40,27 @@
     <Twisty title="All versions of this article" open>
       <Grid colwidth="narrow">
         {#each regions as region}
-        <div>
-          <strong>{region.nm}</strong>
-          <div style:font-size="smaller">
-            {#each data.places.filter(p => p.parentcd === region.cd) as place}
-            <a href="{base}/{place.areacd}/" target="_top">{place.areanm}</a><br/>
-            {/each}
+          {#each [data.places.filter(p => p.parentcd === region.cd)] as places}
+          {#if places[0]}
+          <div>
+            <strong>{region.nm}</strong>
+            <div style:font-size="smaller">
+              {#each places as place}
+              <a href="{base}/{place.areacd}/" target="_top">{place.areanm}</a><br/>
+              {/each}
+            </div>
           </div>
-        </div>
+          {/if}
+          {/each}
         {/each}
       </Grid>
     </Twisty>
   </Container>
 </Embed>
+
+<style>
+  :global(.ons-feature__filler) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+</style>

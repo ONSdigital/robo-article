@@ -32,10 +32,6 @@
   }
 </script>
 
-<svelte:head>
-  <script src="https://cdn.ons.gov.uk/vendor/pym/1.3.2/pym.min.js"></script>
-</svelte:head>
-
 <Header />
 <Breadcrumb links={[{label: "Home", href: "/"}, {label: "Parent", href: "/parent/"}]} background="#eaeaea"/>
 
@@ -77,14 +73,18 @@
     <Twisty title="All versions of this article" open={!data.place.place}>
       <Grid colwidth="narrow">
         {#each regions as region}
-        <div>
-          <strong>{region.nm}</strong>
-          <div style:font-size="smaller">
-            {#each data.places.filter(p => p.parentcd === region.cd) as place}
-            <a href="{base}/{place.areacd}/">{place.areanm}</a><br/>
-            {/each}
-          </div>
-        </div>
+          {#each [data.places.filter(p => p.parentcd === region.cd)] as places}
+            {#if places[0]}
+            <div>
+              <strong>{region.nm}</strong>
+              <div style:font-size="smaller">
+                {#each places as place}
+                <a href="{base}/{place.areacd}/">{place.areanm}</a><br/>
+                {/each}
+              </div>
+            </div>
+            {/if}
+          {/each}
         {/each}
       </Grid>
     </Twisty>
