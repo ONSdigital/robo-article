@@ -59,7 +59,7 @@
         {@html section.content}
       </Highlight>
     {:else if section.type === "Chart" && section.chartType}
-      <Grid colwidth="full">
+      <Grid width="medium" colwidth="full">
         <Chart {section} />
       </Grid>
     {:else}
