@@ -59,7 +59,7 @@ else
 
     section.Section#population
         prop.title Total population #{place.getName("in")}
-        p In #{latest_yr}, #{place.getName("the")} was the #{places.filterBy("parentcd", place.parentcd).getRank(place, latest_col).toWords("ordinal", {dropFirst: true})} largest local authority in #{lookup[place.parentcd].getName("the")}, with a total population of #{place[latest_col].format()}. #{moreLess(place[latest_col] - place[prev], ["An increase", "A decrease", "No change"])} compared with #{prev_yr}.
+        p In #{latest_yr}, #{place.getName("the")} was the #{places.filterBy("parentcd", place.parentcd).getRank(place, latest_col).toWords("ordinal", {dropFirst: true})} largest local authority in #{lookup[place.parentcd].getName("the")}, with a total population of #{place[latest_col].format()}. #{moreLess(place[latest_col] - place[prev_col], ["An increase", "A decrease", "No change"])} compared with #{prev_yr}.
     
     section#chart-timeseries.Chart
         prop.chartType line-highlight
