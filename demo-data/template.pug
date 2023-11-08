@@ -1,47 +1,101 @@
+-// Variables
+-var years =  ["2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]
+-var cols = years.map(year => `p${year}`)
+-var latest_yr = years[years.length - 1]
+-var prev_yr = years[years.length - 2]
+-var latest_col = cols[cols.length - 1]
+-var prev_col = cols[cols.length - 2]
+
+-// Metadata for SEO and analytics
+section.Meta
+    if !place 
+        prop.title How the population has changed in your area - ONS
+        prop.description Demographic trends in local authorities within the UK from #{years[0]} to #{latest_yr}
+    else
+        prop.title How the population has changed #{place.getName("in")} - ONS
+        prop.description Demographic trends #{place.getName("in")} and other local authorities within the UK from #{years[0]} to #{latest_yr}
+    prop.contentTitle Title for google analytics
+    prop.releaseDate 2023-01-01
+    prop.lastUpdated 2023-01-01
+    prop.outputSeries slugforoutputseries
+    prop.contentType robo-journalism
+
+-// Main template
 if !place
     section.Header
         prop.title How the population has changed in your area
-        prop.label Select an area to see how the population has changed
+        prop.standfirst Demographic trends in local authorities within the UK from #{years[0]} to #{latest_yr}
+        prop.label Select a local authority
 
 else
     section.Header
         prop.title How the population has changed #{place.getName("in")}
-        prop.label Select another area to see how the population has changed
+        prop.standfirst Demographic trends #{place.getName("in")} and other local authorities within the UK from #{years[0]} to #{latest_yr}
+        prop.label Select a different local authority
 
-    section.Highlight
-        p In 2020, #{place.getName("the")} was the #{places.filterBy("parentcd", place.parentcd).getRank(place, "p2020").toWords("ordinal", {dropFirst: true})} largest local authority in #{lookup[place.parentcd].getName("the")}, with a total population of #{place.p2020.format()}. #{moreLess(place.p2020 - place.p2019, ["An increase", "A decrease", "No change"])} compared with 2019.
+    section.Summary#section-top
+        prop.title #{place.getName("its")} demographics, #{latest_yr}:
+        section
+            prop.indicator Total population
+            prop.value #{place[latest_col].format()}
+            prop.note people
+            p The total population #{place.getName("in")} #{moreLess(place[latest_col] - place[prev_col], ["rose", "fell", "not changed"])} compared with #{prev_yr}.
+            p #[a(href="#population") Go to population] &darr;
+        section
+            prop.indicator Population density
+            prop.value #{place["density"].format()}
+            prop.note people per sq km
+            p The population density #{place.getName("in")} is #{moreLess(place["density"] - lookup["K02000001"]["density"], ["higher than", "lower than", "the same as"])} the United Kingdom as a whole.
+            p #[a(href="#density") Go to population density] &darr;
+        section
+            prop.indicator Median age
+            prop.value #{place["age_med"].format(".0f")}
+            prop.note years
+            p The average age #{place.getName("in")} is #{moreLess(place["age_med"] - lookup["K02000001"]["age_med"], ["older than", "younger than", "the same as"])} the United Kingdom as a whole.
+            p #[a(href="#age") Go to median age] &darr;
+    
+    section.Warning#caveat
+        p  This is a demo article. The numbers are based on official ONS mid-year population estimates, but may not be presented accurately.
+
+    section.Section#population
+        prop.title Total population #{place.getName("in")}
+        p In #{latest_yr}, #{place.getName("the")} was the #{places.filterBy("parentcd", place.parentcd).getRank(place, latest_col).toWords("ordinal", {dropFirst: true})} largest local authority in #{lookup[place.parentcd].getName("the")}, with a total population of #{place[latest_col].format()}. #{moreLess(place[latest_col] - place[prev], ["An increase", "A decrease", "No change"])} compared with #{prev_yr}.
     
     section#chart-timeseries.Chart
         prop.chartType line-highlight
-        prop.title Largest local authorities #{lookup[place.parentcd].getName("in")}, 2002-2020
+        prop.title Population of local authorities #{lookup[place.parentcd].getName("in")}
+        prop.subtitle Number of usual residents, #{years[0]}-#{latest_yr}
         prop.footer Source: Office for National Statistics
-        prop.data= places.filterBy("parentcd", place.parentcd).toData({x: ["2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"], y: ["p2002", "p2003", "p2004", "p2005", "p2006", "p2007", "p2008", "p2009", "p2010", "p2011", "p2012", "p2013", "p2014", "p2015", "p2016", "p2017", "p2018", "p2019", "p2020"], z: "areanm"})
+        prop.data= places.filterBy("parentcd", place.parentcd).toData({x: years, y: cols, z: "areanm"})
         prop.selected= place.areanm
-        prop.padding-right= 150
+        prop.padding-top= 20
+        prop.padding-right= 120
         prop.padding-left= 80
 
-    section.Section
+    section.Section#density
         prop.title Population density #{place.getName("in")}
-        p In 2020, the population density #{place.getName("in")} was #{place["density"].format()} people per square kilometre, which was #{moreLess(place["density"] - lookup[place.parentcd]["density"], ["more than", "less than", "the same as"])} #{lookup[place.parentcd].getName("the")} (#{lookup[place.parentcd]["density"].format()}), and #{moreLess(place["density"] - lookup["K02000001"]["density"], ["more than", "less than", "the same as"])} the United Kingdom as a whole (#{lookup["K02000001"]["density"].format()}).
+        p In #{latest_yr}, the population density #{place.getName("in")} was #{place["density"].format()} people per square kilometre, which was #{moreLess(place["density"] - lookup[place.parentcd]["density"], ["more than", "less than", "the same as"])} #{lookup[place.parentcd].getName("the")} (#{lookup[place.parentcd]["density"].format()}), and #{moreLess(place["density"] - lookup["K02000001"]["density"], ["more than", "less than", "the same as"])} the United Kingdom as a whole (#{lookup["K02000001"]["density"].format()}).
     
     section#chart-density.Chart
         prop.chartType bar-highlight
-        prop.title Densest local authorities #{lookup[place.parentcd].getName("in")}, 2020
+        prop.title Densest local authorities #{lookup[place.parentcd].getName("in")}
+        prop.subtitle Population density in people per sq km, #{latest_yr}
         prop.footer Source: Office for National Statistics
         prop.data= places.filterBy("parentcd", place.parentcd).top("density", 5, place).toData({x: "density", y: "areanm"})
         prop.selected= place.areanm
-        prop.padding-left= 180
+        prop.padding-left= 120
 
-    section.Section
+    section.Section#age
         prop.title Median age #{place.getName("in")}
-        p In 2020, the median age #{place.getName("in")} was #{place["age_med"].format(".0f")} years, which was #{moreLess(Math.round(place["age_med"]) - Math.round(lookup[place.parentcd]["age_med"]), ["older than", "younger than", "the same as"])} #{lookup[place.parentcd].getName("the")} (#{lookup[place.parentcd]["age_med"].format(".0f")} years), and #{moreLess(Math.round(place["age_med"]) - Math.round(lookup["K02000001"]["age_med"]), ["older than", "younger than", "the same as"])} the United Kingdom as a whole (#{lookup["K02000001"]["age_med"].format(".0f")} years).
+        p In #{latest_yr}, the median age #{place.getName("in")} was #{place["age_med"].format(".0f")} years, which was #{moreLess(Math.round(place["age_med"]) - Math.round(lookup[place.parentcd]["age_med"]), ["older than", "younger than", "the same as"])} #{lookup[place.parentcd].getName("the")} (#{lookup[place.parentcd]["age_med"].format(".0f")} years), and #{moreLess(Math.round(place["age_med"]) - Math.round(lookup["K02000001"]["age_med"]), ["older than", "younger than", "the same as"])} the United Kingdom as a whole (#{lookup["K02000001"]["age_med"].format(".0f")} years).
 
     section#chart-age.Chart
         prop.chartType bar-highlight
         prop.mode marker
-        prop.title Oldest local authorities #{lookup[place.parentcd].getName("in")}, 2020
+        prop.title Oldest local authorities #{lookup[place.parentcd].getName("in")}
+        prop.subtitle Median age in years, #{latest_yr}
         prop.footer Source: Office for National Statistics
         prop.data= places.filterBy("parentcd", place.parentcd).top("age_med", 5, place).toData({x: "age_med", y: "areanm"})
         prop.selected= place.areanm
         prop.xMin= 30
-        prop.padding-left= 180
+        prop.padding-left= 120

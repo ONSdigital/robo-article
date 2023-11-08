@@ -2,7 +2,7 @@
 
 A Svelte Kit template for creating embedded semi-automated journalism content on a standard article page.
 
-The template is design to use PUG templates and wide-format CSV files, as created within [this editor](https://github.com/ONSvisual/robo-editor).
+The template is designed to use PUG templates and wide-format CSV files, as created within [this editor](https://github.com/ONSvisual/robo-editor).
 
 ## Getting started
 
@@ -15,7 +15,7 @@ npm install
 Next, run this command to build the demo data files. This will read the PUG and CSV files in the **/demo-data** folder, and write JSON and CSV files to **/static/data**:
 
 ```bash
-npm run build-data
+npm run build:data
 ```
 
 And, finally, run the demo in preview/dev mode. It should be viewable at [localhost:5173](http://localhost:5173):
@@ -26,9 +26,9 @@ npm run dev
 
 ## Using your own data and templates
 
-To use your own CSV data and PUG template, you will either need to overwrite the demo data or, for better collaboration, read directly from your project source files on a shared network drive (this also avoids the risk of writing data files to insecure locations).
+To use your own CSV data and PUG template, you will either need to overwrite the demo data or, for better collaboration, read directly from your project source files on a shared network drive (this also avoids the risk of writing sensitive data files to insecure locations like Github).
 
-When you move the files, you'll need to change the following parameters in the **/scripts/build-data.config.js** file:
+When you move the files, you'll need to change the following parameters in the **/src/app.config.js** file:
 
 ```javascript
 // Locations of data file and template (path to a local or shared drive)
@@ -61,16 +61,20 @@ The best place to start editing is in the **/src/routes/+page.svelte** file.
 
 ## Building the app
 
-When you're ready to publish the app (either for preview or for production), you'll need to run the **build** command. This will build a static version of the app in the **/build** folder, which can be copied to wherever you want to host the app:
+When you're ready to publish the app (either for preview or for production), you'll need to run the **build** command. This will build a static version of the app in the **/build** folder, which can be copied to wherever you want to host the app.
+
+*Note: The build consists of static HTML, CSS and Javascript files that do not require any back-end code to run.*
+
+Before building the app, you'll need to customise the base path(s) in the **/src/app.config.js** file. This relates to the path on the server where you intend to place the contents of the **/build** folder. The default path is **/robo-article**. You can set two different paths, **base_prod** and **base_preview**, in case you need to deploy a preview of the app in a different location (eg. a secure/private server or Github Pages).
+
+To build the app using the **base_prod** path, run:
 
 ```bash
 npm run build
 ```
 
-Before building the app, you'll need to customise the base path in the **/svelte.config.js** file. The default path is **/robo-article**. You'll beed to change this to the base-relative path on your server where you intend to place the contents of the **/build** folder (eg. **/visualisations/my-app**):
+To build the app using the **base_preview** path, run:
 
-```javascript
-paths: {
-  base: production ? '/robo-article' : ''
-},
+```bash
+npm run build:preview
 ```

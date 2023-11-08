@@ -1,66 +1,43 @@
 <script>
-  import { base } from "$app/paths";
-  import { regions } from "$lib/config";
-  import {
-    Embed,
-    Highlight,
-    Grid,
-    Select,
-    Twisty,
-    Container
-  } from "@onsvisual/svelte-components";
+    import { onMount } from "svelte";
+    import { base } from "$app/paths";
+    import { Embed, Grid } from "@onsvisual/svelte-components";
+    import { Chart } from "@onsvisual/svelte-charts";
+    import { getPlace } from "$lib/utils";
 
-  export let data;
+    export let data;
 
-  async function doSelect(e) {
-    let code = typeof e === "string" ? e : e?.detail?.areacd;
-    window.top.location.href = `${base}/${code}/`;
-  }
+    let section;
+
+    onMount(async () => {
+        const params = new URLSearchParams(document.location.search);
+        const code = params.get("area");
+        const id = params.get("chart");
+
+        if (code && id && data.places.map(p => p.areacd).includes(code)) {
+            const place = await getPlace(`${base}/data/json/${code}.json`);
+            section = place.sections.find(s => s.id === id);
+        }
+    });
 </script>
 
+<svelte:head>
+    {#if section?.title}
+    <title>{section.title}</title>
+    {/if}
+    <meta name="robots" content="noindex" />
+    <meta name="googlebot" content="indexifembedded" />
+</svelte:head>
+
 <Embed>
-  {#each [data.place.sections[0]] as section}
-  <Highlight height="auto">
-    {#if section.title}<h2>{section.title}</h2>{/if}
-    {#if section.label}<label for="select" style:font-size="1rem">{section.label}</label>{/if}
-    <Select
-      id="select"
-      idKey="areacd"
-      labelKey="areanm"
-      options={data.places}
-      mode="search"
-      on:change={doSelect}
-      placeholder="Find a local authority..."
-      floatingConfig="{{ strategy: 'fixed' }}"
-    />
-  </Highlight>
-  {/each}
-
-  <Container marginTop marginBottom>
-    <Twisty title="All versions of this article" open>
-      <Grid colwidth="narrow">
-        {#each regions as region}
-          {#each [data.places.filter(p => p.parentcd === region.cd)] as places}
-          {#if places[0]}
-          <div>
-            <strong>{region.nm}</strong>
-            <div style:font-size="smaller">
-              {#each places as place}
-              <a href="{base}/{place.areacd}/" target="_top">{place.areanm}</a><br/>
-              {/each}
-            </div>
-          </div>
-          {/if}
-          {/each}
-        {/each}
-      </Grid>
-    </Twisty>
-  </Container>
+    {#if section}
+    <Grid width="narrow" colwidth="full">
+        <div class="chart-outer">
+            <Chart {section} />
+            {#if section.note}
+            <div class="chart-note">{section.note}</div>
+            {/if}
+        </div>
+    </Grid>
+    {/if}
 </Embed>
-
-<style>
-  :global(.ons-feature__filler) {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-</style>

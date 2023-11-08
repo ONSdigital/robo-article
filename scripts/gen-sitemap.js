@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { base } from "../svelte.config.js";
+import { base_prod } from "../src/app.config.js";
 
 const host = "https://www.ons.gov.uk"
 
@@ -24,7 +24,7 @@ let date = (new Date()).toISOString().split('T')[0];
 let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${codes.map(code => `<url>
-<loc>${host}${base}/${code ? `${code}/` : ""}</loc>
+<loc>${host}${base_prod}/${code ? `${code}/` : ""}</loc>
 <lastmod>${date}</lastmod>
 <changefreq>monthly</changefreq>
 <priority>1.0</priority>

@@ -6,4 +6,4 @@
 /build/
 /static/data/json/
 /static/data/places.csv
-# /source-data/
+/package-lock.json
