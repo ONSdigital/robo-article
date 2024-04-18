@@ -5,21 +5,23 @@ import pug from "pug";
 import { filter, cols, source_dir, data_file, template_file, files_to_copy } from "../src/app.config.js";
 
 // Load data CSV
-let data_raw = readFileSync(`${source_dir}/${data_file}`, {encoding:'utf8', flag:'r'});
-let data = new MagicArray(...csvParse(data_raw.replace(/\uFEFF/g, ''), autoType));
+const data_raw = readFileSync(`${source_dir}/${data_file}`, {encoding:'utf8', flag:'r'});
+const data_arr = csvParse(data_raw.replace(/\uFEFF/g, ''), autoType);
+const data = new MagicArray();
+for (const d of data_arr) data.push(d);
 
 // Create the output directories (if they don't exist)
-let dir = "./static/data/json";
+const dir = "./static/data/json";
 if (!existsSync(dir)){
     mkdirSync(dir, { recursive: true });
 }
 
 // Load PUG file
-let template = readFileSync(`${source_dir}/${template_file}`, {encoding:'utf8', flag:'r'});
+const template = readFileSync(`${source_dir}/${template_file}`, {encoding:'utf8', flag:'r'});
 
 // Process data file into array of LAs and keyed lookup of all geographies
-let places = Array.isArray(filter) && filter.length > 0 ? data.filter(d => filter.includes(d.areacd.slice(0,3))) : data;
-let lookup = {};
+const places = Array.isArray(filter) && filter.length > 0 ? data.filter(d => filter.includes(d.areacd.slice(0,3))) : data;
+const lookup = {};
 data.forEach(d => lookup[d.areacd] = d);
 
 // Cycle through LAs (and null for "no area selected")
@@ -37,7 +39,7 @@ data.forEach(d => lookup[d.areacd] = d);
 
 // Generate filtered CSV (only including cols and filter defined in config.js file)
 let csv_str = cols.join(",") + "\n";
-let rows = []
+const rows = []
 places.forEach(place => rows.push(cols.map(col => {
     let val = place[col];
     return typeof val == "string" && val.includes(",") ? `"${val}"` : val;
