@@ -1,10 +1,10 @@
 # robo-article
 
-A Svelte Kit template for creating embedded semi-automated journalism content on a standard article page.
+A Svelte Kit template for creating semi-automated journalism (AKA "robo-journalism") content on a standard article page.
 
 The template is designed to use PUG templates and wide-format CSV files, as created within [this editor](https://github.com/ONSvisual/robo-editor).
 
-*Note: If you'd like to create semi-automated articles within an iframe, please use this [alternative template](https://github.com/ONSvisual/robo-embed).*
+*Note: If you'd like to create semi-automated articles to embed within an iframe, please use this [alternative template](https://github.com/ONSvisual/robo-embed).*
 
 ## Getting started
 
