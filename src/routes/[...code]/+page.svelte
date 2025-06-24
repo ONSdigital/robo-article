@@ -8,7 +8,7 @@
     Header,
     Breadcrumb,
     Main,
-    Titleblock,
+    Hero,
     Section,
     Highlight,
     Grid,
@@ -25,6 +25,15 @@
   export let data;
 
   let selected;
+
+  function formatDate(str) {
+    const date = new Date(str);
+    return date.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
 
   async function doSelect(e) {
     const code = typeof e === "string" ? e : e?.detail?.areacd;
@@ -77,31 +86,28 @@
     {#if section.type === "Meta"}
       <!-- meta -->
     {:else if section.type === "Header"}
-      <Titleblock
+      <Hero
         theme="dark"
+        width="wide"
         title={section.title}
+        lede={section.standfirst || ""}
         background="#3b7a9e"
-        meta={data.meta.lastUpdated ? [{key: "Last updated", value: data.meta.lastUpdated}] : null}>
-        {#if section.standfirst}
-        <div class="ons-grid">
-          <div class="standfirst ons-grid__col ons-col-10@m">{section.standfirst}</div>
-        </div>
-        {/if}
+        meta={data.meta.lastUpdated ? [
+          {key: "Last updated", value: formatDate(data.meta.lastUpdated)}
+        ] : null}>
         <div>
-          {#if section.label}<label for="select">{section.label}</label>{/if}
           <Select
             id="select"
-            idKey="areacd"
+            label={section.label}
             labelKey="areanm"
             options={data.places}
             value={selected}
-            mode="search"
             placeholder="Type an area name..."
             on:change={doSelect}
-            autoClear
+            clearable={false}
           />
         </div>
-      </Titleblock>
+      </Hero>
     {:else if section.type === "Highlight"}
       <Highlight id={section.id} height="auto" marginBottom={false} theme="light">
         {@html section.content || ""}

@@ -16,7 +16,7 @@ section.Meta
         prop.description Demographic trends #{place.getName("in")} and other local authorities within the UK from #{years[0]} to #{latest_yr}
     prop.contentTitle Title for google analytics
     prop.releaseDate 2023-01-01
-    prop.lastUpdated 2023-01-01
+    prop.lastUpdated 2025-01-01
     prop.outputSeries slugforoutputseries
     prop.contentType robo-journalism
 
@@ -70,7 +70,7 @@ else
         prop.selected= place.areanm
         prop.padding-top= 20
         prop.padding-right= 120
-        prop.padding-left= 80
+        prop.padding-left= 60
 
     section.Section#density
         prop.title Population density #{place.getName("in")}
@@ -84,6 +84,7 @@ else
         prop.data= places.filterBy("parentcd", place.parentcd).top("density", 5, place).toData({x: "density", y: "areanm"})
         prop.selected= place.areanm
         prop.padding-left= 120
+        prop.directLabel= true
 
     section.Section#age
         prop.title Median age #{place.getName("in")}
@@ -91,11 +92,10 @@ else
 
     section#chart-age.Chart
         prop.chartType bar-highlight
-        prop.mode marker
         prop.title Oldest local authorities #{lookup[place.parentcd].getName("in")}
         prop.subtitle Median age in years, #{latest_yr}
         prop.footer Source: Office for National Statistics
         prop.data= places.filterBy("parentcd", place.parentcd).top("age_med", 5, place).toData({x: "age_med", y: "areanm"})
         prop.selected= place.areanm
-        prop.xMin= 30
         prop.padding-left= 120
+        prop.directLabel= true

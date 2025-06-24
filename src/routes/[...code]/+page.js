@@ -11,10 +11,10 @@ export async function load({ fetch, parent, params }) {
   if (places.map(p => p.areacd).includes(code)) {
     place = await getPlace(`${base}/data/json/${code}.json`, fetch);
   } else if (redirect_url) {
-    throw redirect(
-      301,
-      redirect_url
-    );
+    redirect(
+            301,
+            redirect_url
+          );
   } else {
     place = await getPlace(`${base}/data/json/default.json`, fetch);
   }

@@ -5,7 +5,10 @@ label[for=select] {
 
 .standfirst {
   font-size: 24px;
-  margin-top: -16px;
+}
+
+.chart-outer {
+  width: 100%;
 }
 
 .chart-note {
@@ -45,4 +48,8 @@ button, input, optgroup, select, textarea {
 h1.ons-u-fs-xxxl {
   font-size: 38px;
   line-height: 48px;
+}
+
+.autocomplete__dropdown-arrow-down {
+  color: var(--ons-color-black);
 }
