@@ -88,7 +88,7 @@
     {:else if section.type === "Header"}
       <Hero
         theme="dark"
-        width="wide"
+        width="medium"
         title={section.title}
         lede={section.standfirst || ""}
         background="#3b7a9e"

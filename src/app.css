@@ -1,6 +1,6 @@
 label[for=select] {
   display: block;
-  margin: 28px 0 14px;
+  margin: 14px 0;
 }
 
 .standfirst {
@@ -8,6 +8,7 @@ label[for=select] {
 }
 
 .chart-outer {
+  font-size: 14px;
   width: 100%;
 }
 
