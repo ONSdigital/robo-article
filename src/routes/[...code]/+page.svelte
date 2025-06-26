@@ -8,13 +8,14 @@
     Header,
     Breadcrumb,
     Main,
-    Titleblock,
+    Hero,
     Section,
     Highlight,
     Grid,
     Footer,
     Select,
-    Notice
+    Notice,
+    Button
   } from "@onsvisual/svelte-components";
   import { Chart } from "@onsvisual/svelte-charts";
   import ChartActions from "$lib/layout/ChartActions.svelte";
@@ -25,9 +26,19 @@
   export let data;
 
   let selected;
+  let clearInput;
 
-  async function doSelect(e) {
-    const code = typeof e === "string" ? e : e?.detail?.areacd;
+  function formatDate(str) {
+    const date = new Date(str);
+    return date.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  async function doSelect() {
+    const code = selected?.areacd;
     const newplace = data.places.find(p => p.areacd === code);
     if (newplace) {
       // selected = null;
@@ -36,6 +47,8 @@
         areaCode: newplace.areacd,
         areaName: newplace.areanm
       });
+      selected = null;
+      clearInput();
       goto(`${base}/${code}/`);
     }
   }
@@ -70,38 +83,39 @@
 <AnalyticsBanner {analyticsProps} />
 <PhaseBanner phase="beta" href="https://www.ons.gov.uk/feedback" />
 <Header />
-<Breadcrumb links={breadcrumb} theme="dark" background="#3b7a9e"/>
+<Breadcrumb links={breadcrumb} theme="blue" background="#3b7a9e"/>
 
 <Main>
   {#each data.place.sections as section}
     {#if section.type === "Meta"}
       <!-- meta -->
     {:else if section.type === "Header"}
-      <Titleblock
-        theme="dark"
+      <Hero
+        theme="blue"
+        width="medium"
         title={section.title}
+        lede={section.standfirst || ""}
         background="#3b7a9e"
-        meta={data.meta.lastUpdated ? [{key: "Last updated", value: data.meta.lastUpdated}] : null}>
-        {#if section.standfirst}
-        <div class="ons-grid">
-          <div class="standfirst ons-grid__col ons-col-10@m">{section.standfirst}</div>
-        </div>
-        {/if}
-        <div>
-          {#if section.label}<label for="select">{section.label}</label>{/if}
-          <Select
-            id="select"
-            idKey="areacd"
-            labelKey="areanm"
-            options={data.places}
-            value={selected}
-            mode="search"
-            placeholder="Type an area name..."
-            on:change={doSelect}
-            autoClear
-          />
-        </div>
-      </Titleblock>
+        meta={data.meta.lastUpdated ? [
+          {key: "Last updated", value: formatDate(data.meta.lastUpdated)}
+        ] : null}>
+        <form class="select-form" on:submit|preventDefault={doSelect}>
+          <div style:padding-right="6px" style:flex-grow="1">
+            <Select
+              id="select"
+              label={section.label}
+              labelKey="areanm"
+              options={data.places}
+              bind:value={selected}
+              bind:clearInput
+              placeholder="Type an area name..."
+            />
+          </div>
+          <div style:padding="6px 0 3px" style:flex-shrink="1">
+            <Button type="sumbit" small>Select area</Button>
+          </div>
+        </form>
+      </Hero>
     {:else if section.type === "Highlight"}
       <Highlight id={section.id} height="auto" marginBottom={false} theme="light">
         {@html section.content || ""}

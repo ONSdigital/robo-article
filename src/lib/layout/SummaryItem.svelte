@@ -29,10 +29,14 @@
     .summary-item {
         display: flex;
         flex-direction: row;
+        padding-bottom: 12px;
     }
     :global(.summary-item + .summary-item) {
         border-top: 1px solid #bcbcbd;
         padding-top: 12px;
+    }
+    :global(.summary-item:last-of-type) {
+        padding-bottom: 0;
     }
     .summary-label {
         display: block;
