@@ -8,15 +8,19 @@
     Highlight,
     Section,
     Grid,
+    GridCell,
     Select,
-    Twisty,
+    Button,
+    Details,
     Container
   } from "@onsvisual/svelte-components";
 
   export let data;
 
-  async function doSelect(e) {
-    const code = typeof e === "string" ? e : e?.detail?.areacd;
+  let selected;
+
+  async function doSelect() {
+    const code = selected?.areacd;
     const newplace = data.places.find(p => p.areacd === code);
     if (newplace) {
       analyticsEvent({
@@ -51,20 +55,25 @@
         <!-- meta -->
     {:else if section.type === "Header"}
     <img src="{base}/img/header.png" alt=""/>
-    <Highlight height="auto" marginBottom={false}>
-      
-      {#if section.title}<h2>{section.title}</h2>{/if}
-      {#if section.label}<label for="select" style:font-size="1rem">{section.label}</label>{/if}
-      <Select
-        id="select"
-        idKey="areacd"
-        labelKey="areanm"
-        options={data.places}
-        mode="search"
-        on:change={doSelect}
-        placeholder="Type an area name..."
-        floatingConfig="{{ strategy: 'fixed' }}"
-      />
+    <Highlight height="auto" marginBottom={false} themeOverrides={{"--ons-color-text": "var(--ons-color-ocean-blue)"}}>
+      <div class="header-block">
+        {#if section.title}<h2>{section.title}</h2>{/if}
+        <form class="select-form" on:submit|preventDefault={doSelect}>
+          <div style:padding-right="6px" style:flex-grow="1">
+            <Select
+              id="select"
+              label={section.label}
+              labelKey="areanm"
+              options={data.places}
+              bind:value={selected}
+              placeholder="Type an area name..."
+            />
+          </div>
+          <div style:padding="6px 0 3px" style:flex-shrink="1">
+            <Button type="sumbit" small>Select area</Button>
+          </div>
+        </form>
+      </div>
     </Highlight>
     {:else}
     <Section id={section.id} title={section.title} marginTop={true} marginBottom={false}>
@@ -74,24 +83,24 @@
   {/each}
 
   <Container marginTop marginBottom>
-    <Twisty title="All versions of this article" open>
-      <Grid colwidth="narrow">
+    <Details title="All versions of this article" open>
+      <Grid colWidth="narrow">
         {#each regions as region}
           {#each [data.places.filter(p => p.parentcd === region.cd)] as places}
           {#if places[0]}
-          <div>
+          <GridCell>  
             <strong>{region.nm}</strong>
             <div style:font-size="smaller">
               {#each places as place}
               <a href="{base}/{place.areacd}/" target="_top">{place.areanm}</a><br/>
               {/each}
             </div>
-          </div>
+          </GridCell>
           {/if}
           {/each}
         {/each}
       </Grid>
-    </Twisty>
+    </Details>
   </Container>
 </Embed>
 
