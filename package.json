@@ -1,6 +1,6 @@
 {
   "name": "@onsvisual/robo-article",
-  "homepage": "http://onsvisual.github.io/robo-article",
+  "homepage": "http://onsdigital.github.io/robo-article",
   "version": "0.1.0",
   "scripts": {
     "dev": "vite dev --mode preview",
