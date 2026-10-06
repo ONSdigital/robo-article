@@ -144,7 +144,7 @@
 			</Grid>
 		{:else if section.type === "Summary"}
 			<Section id={section.id} title={section.title} marginTop marginBottom={false} />
-			<Grid width="narrow" colwidth="full" height={100}>
+			<Grid cls="ons-u-mt-l" width="narrow" colwidth="full" height={100}>
 				{#each section.sections as sub}
 					<SummaryItem section={sub} />
 				{/each}
