@@ -1,13 +1,12 @@
 <script>
 	import html2canvas from "html2canvas";
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 	import { Button, Textarea } from "@onsvisual/svelte-components";
 
-	export let place;
-	export let section;
+	let { place, section } = $props();
 
-	let el;
-	let showEmbed = false;
+	let el = $state();
+	let showEmbed = $state(false);
 
 	function formatData(data) {
 		let csv = "";
@@ -70,9 +69,9 @@
 		navigator.clipboard.writeText(str).then(() => alert(msg));
 	}
 
-	$: embedCode = `<div id="${section.id}"></div>
+	let embedCode = $derived(`<div id="${section.id}"></div>
 <scr${""}ipt src="https://cdn.ons.gov.uk/vendor/pym/1.3.2/pym.min.js"></scr${""}ipt>
-<scr${""}ipt>var pymParent = new pym.Parent("${section.id}", "https://www.ons.gov.uk${base}/embed/?area=${place.areacd}&chart=${section.id}", {name: "${section.id}", title: "Embedded chart"});</scr${""}ipt>`;
+<scr${""}ipt>var pymParent = new pym.Parent("${section.id}", "https://www.ons.gov.uk${resolve("/embed/")}?area=${place.areacd}&chart=${section.id}", {name: "${section.id}", title: "Embedded chart"});</scr${""}ipt>`);
 </script>
 
 <div class="chart-actions" bind:this={el}>

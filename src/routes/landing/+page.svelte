@@ -1,5 +1,5 @@
 <script>
-	import { base } from "$app/paths";
+	import { asset, resolve } from "$app/paths";
 	import { regions } from "$lib/config";
 	import {
 		Embed,
@@ -15,9 +15,9 @@
 		Container
 	} from "@onsvisual/svelte-components";
 
-	export let data;
+	let { data } = $props();
 
-	let selected;
+	let selected = $state();
 
 	async function doSelect() {
 		const code = selected?.areacd;
@@ -28,7 +28,7 @@
 				areaCode: newplace.areacd,
 				areaName: newplace.areanm
 			});
-			window.top.location.href = `${base}/${code}/`;
+			window.top.location.href = resolve(`/${code}/`);
 		}
 	}
 
@@ -54,7 +54,7 @@
 		{#if section.type === "Meta"}
 			<!-- meta -->
 		{:else if section.type === "Header"}
-			<img src="{base}/img/header.png" alt="" />
+			<img src={asset("/img/header.png")} alt="" />
 			<Highlight
 				height="auto"
 				marginBottom={false}
@@ -62,7 +62,13 @@
 			>
 				<div class="header-block">
 					{#if section.title}<h2>{section.title}</h2>{/if}
-					<form class="select-form" on:submit|preventDefault={doSelect}>
+					<form
+						class="select-form"
+						onsubmit={(event) => {
+							event.preventDefault();
+							doSelect();
+						}}
+					>
 						<div style:padding-right="6px" style:flex-grow="1">
 							<Select
 								id="select"
@@ -96,7 +102,7 @@
 								<strong>{region.nm}</strong>
 								<div style:font-size="smaller">
 									{#each places as place}
-										<a href="{base}/{place.areacd}/" target="_top"
+										<a href={resolve(`/${place.areacd}/`)} target="_top"
 											>{place.areanm}</a
 										><br />
 									{/each}

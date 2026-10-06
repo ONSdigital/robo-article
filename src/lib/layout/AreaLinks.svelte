@@ -1,11 +1,12 @@
 <script>
-	import { base } from "$app/paths";
+	import { resolve } from "$app/paths";
 	import { regions } from "$lib/config";
 	import { Grid, GridCell, Details, Container } from "@onsvisual/svelte-components";
 
-	export let data;
+	let { data } = $props();
 
-	let open = !data?.place?.place;
+	// Open on the default page (no area selected); reset when the page's data changes
+	let open = $derived(!data?.place?.place);
 </script>
 
 <Container marginTop={!data?.place?.place} marginBottom>
@@ -19,8 +20,8 @@
 							<div style:font-size="smaller">
 								{#each places as place}
 									<a
-										href="{base}/{place.areacd}/"
-										on:click={() => (open = false)}
+										href={resolve(`/${place.areacd}/`)}
+										onclick={() => (open = false)}
 									>
 										{place.areanm}
 									</a><br />

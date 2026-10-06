@@ -1,5 +1,5 @@
 <script>
-	import { base } from "$app/paths";
+	import { asset, resolve } from "$app/paths";
 	import { goto } from "$app/navigation";
 	import {
 		AnalyticsBanner,
@@ -23,10 +23,10 @@
 	import AreaLinks from "$lib/layout/AreaLinks.svelte";
 	import { breadcrumb } from "../../app.config";
 
-	export let data;
+	let { data } = $props();
 
-	let selected;
-	let clearInput;
+	let selected = $state();
+	let clearInput = $state();
 
 	function formatDate(str) {
 		const date = new Date(str);
@@ -49,12 +49,12 @@
 			});
 			selected = null;
 			clearInput();
-			goto(`${base}/${code}/`);
+			goto(resolve(`/${code}/`));
 		}
 	}
 
 	// async function doClear() {
-	//   goto(`${base}/`);
+	//   goto(resolve("/"));
 	// }
 
 	const analyticsProps = (() => {
@@ -72,10 +72,10 @@
 	<title>{data?.meta?.title || ""}</title>
 	<meta property="og:title" content={data?.meta?.title || ""} />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://www.ons.gov.uk{base}" />
+	<meta property="og:url" content="https://www.ons.gov.uk{resolve('/')}" />
 	<meta
 		property="og:image"
-		content="https://www.ons.gov.uk{base}/{data?.meta?.image || 'img/og.png'}"
+		content="https://www.ons.gov.uk{asset(`/${data?.meta?.image || 'img/og.png'}`)}"
 	/>
 	<meta
 		property="og:image:type"
@@ -106,7 +106,13 @@
 					? [{ key: "Last updated", value: formatDate(data.meta.lastUpdated) }]
 					: null}
 			>
-				<form class="select-form" on:submit|preventDefault={doSelect}>
+				<form
+					class="select-form"
+					onsubmit={(event) => {
+						event.preventDefault();
+						doSelect();
+					}}
+				>
 					<div style:padding-right="6px" style:flex-grow="1">
 						<Select
 							id="select"

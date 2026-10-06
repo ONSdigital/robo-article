@@ -1,13 +1,13 @@
 <script>
 	import { onMount } from "svelte";
-	import { base } from "$app/paths";
+	import { asset } from "$app/paths";
 	import { Embed, Grid } from "@onsvisual/svelte-components";
 	import { Chart } from "@onsvisual/svelte-charts";
 	import { getPlace } from "$lib/utils";
 
-	export let data;
+	let { data } = $props();
 
-	let section;
+	let section = $state();
 
 	onMount(async () => {
 		const params = new URLSearchParams(document.location.search);
@@ -15,7 +15,7 @@
 		const id = params.get("chart");
 
 		if (code && id && data.places.map((p) => p.areacd).includes(code)) {
-			const place = await getPlace(`${base}/data/json/${code}.json`);
+			const place = await getPlace(asset(`/data/json/${code}.json`));
 			section = place.sections.find((s) => s.id === id);
 		}
 	});
