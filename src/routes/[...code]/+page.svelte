@@ -165,4 +165,4 @@
 	<AreaLinks {data} />
 </Main>
 
-<Footer theme="dark" />
+<Footer />

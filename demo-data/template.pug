@@ -1,12 +1,14 @@
 -// Variables
--var years =  ["2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]
+-// Years come from the population columns in the CSV (p2001, p2002...)
+-var years = Object.keys(places[0]).filter(key => /^p\d{4}$/.test(key)).map(key => key.slice(1))
 -var cols = years.map(year => `p${year}`)
 -var latest_yr = years[years.length - 1]
 -var prev_yr = years[years.length - 2]
 -var latest_col = cols[cols.length - 1]
 -var prev_col = cols[cols.length - 2]
--var first_col = cols[0]
 -var region = lookup[place?.parentcd]
+-var siblings = place ? places.filterBy("parentcd", place.parentcd) : []
+-var first_col = cols[0]
 -var uk = lookup["K02000001"]
 -// Median ages are shown as whole numbers, so compare the rounded values
 -var older = {texts: ["older than", "the same as", "younger than"]}
@@ -65,18 +67,20 @@ else
 
     section.Section#population
         prop.title Total population #{place.getName("in")}
-        p In #{latest_yr}, #{place.getName("the")} was #{places.filterBy("parentcd", place.parentcd).getRank(place, latest_col).describe("largest")} local authority in #{region.getName("the")}, with a population of #{place[latest_col].approx()}. Since #{years[0]}, its population has #{place[first_col].describeChange(place[latest_col], {texts: ["increased", "decreased", "stayed the same"]})}.
+        p In #{latest_yr}, #{place.getName("the")} was #{siblings.getRank(place, latest_col).describe("largest")} local authority in #{region.getName("the")}, with a population of #{place[latest_col].approx()}. Since #{years[0]}, its population has #{place[first_col].describeChange(place[latest_col], {texts: ["increased", "decreased", "stayed the same"]})}.
     
     section#chart-timeseries.Chart
         prop.chartType line-highlight
         prop.title Population of local authorities #{region.getName("in")}
         prop.subtitle Number of usual residents, #{years[0]}-#{latest_yr}
         prop.footer Source: Office for National Statistics
-        prop.data= places.filterBy("parentcd", place.parentcd).toData({x: years, y: cols, z: "areanm"})
+        prop.data= siblings.toData({x: years, y: cols, z: "areanm"})
         prop.selected= place.areanm
         prop.padding-top= 20
         prop.padding-right= 120
         prop.padding-left= 60
+        //- Show years without a thousands separator (the default is "2,024")
+        prop.xFormatTickString d
 
     section.Section#density
         prop.title Population density #{place.getName("in")}
@@ -87,7 +91,7 @@ else
         prop.title Densest local authorities #{region.getName("in")}
         prop.subtitle Population density in people per sq km, #{latest_yr}
         prop.footer Source: Office for National Statistics
-        prop.data= places.filterBy("parentcd", place.parentcd).top("density", 5, place).toData({x: "density", y: "areanm"})
+        prop.data= siblings.top("density", 5, place).toData({x: "density", y: "areanm"})
         prop.selected= place.areanm
         prop.padding-left= 120
         prop.directLabel= true
@@ -101,7 +105,7 @@ else
         prop.title Oldest local authorities #{region.getName("in")}
         prop.subtitle Median age in years, #{latest_yr}
         prop.footer Source: Office for National Statistics
-        prop.data= places.filterBy("parentcd", place.parentcd).top("age_med", 5, place).toData({x: "age_med", y: "areanm"})
+        prop.data= siblings.top("age_med", 5, place).toData({x: "age_med", y: "areanm"})
         prop.selected= place.areanm
         prop.padding-left= 120
         prop.directLabel= true
