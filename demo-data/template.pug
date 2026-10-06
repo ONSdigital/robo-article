@@ -5,6 +5,12 @@
 -var prev_yr = years[years.length - 2]
 -var latest_col = cols[cols.length - 1]
 -var prev_col = cols[cols.length - 2]
+-var first_col = cols[0]
+-var region = lookup[place?.parentcd]
+-var uk = lookup["K02000001"]
+-// Median ages are shown as whole numbers, so compare the rounded values
+-var older = {texts: ["older than", "the same as", "younger than"]}
+-var ageCompare = (a, b) => compareTo(Math.round(a), Math.round(b), older)
 
 -// Metadata for SEO and analytics
 section.Meta
@@ -39,19 +45,19 @@ else
             prop.indicator Total population
             prop.value #{place[latest_col].format()}
             prop.note people
-            p The total population #{place.getName("in")} #{moreLess(place[latest_col] - place[prev_col], ["rose", "fell", "not changed"])} compared with #{prev_yr}.
+            p The total population #{place.getName("in")} #{place[prev_col].describeChange(place[latest_col])} compared with #{prev_yr}.
             p #[a(href="#population") Go to population] &darr;
         section
             prop.indicator Population density
             prop.value #{place["density"].format()}
             prop.note people per sq km
-            p The population density #{place.getName("in")} is #{moreLess(place["density"] - lookup["K02000001"]["density"], ["higher than", "lower than", "the same as"])} the United Kingdom as a whole.
+            p The population density #{place.getName("in")} is #{place.density.compareTo(uk.density)} the United Kingdom as a whole.
             p #[a(href="#density") Go to population density] &darr;
         section
             prop.indicator Median age
             prop.value #{place["age_med"].format(".0f")}
             prop.note years
-            p The average age #{place.getName("in")} is #{moreLess(place["age_med"] - lookup["K02000001"]["age_med"], ["older than", "younger than", "the same as"])} the United Kingdom as a whole.
+            p The average age #{place.getName("in")} is #{ageCompare(place.age_med, uk.age_med)} the United Kingdom as a whole.
             p #[a(href="#age") Go to median age] &darr;
     
     section.Warning#caveat
@@ -59,11 +65,11 @@ else
 
     section.Section#population
         prop.title Total population #{place.getName("in")}
-        p In #{latest_yr}, #{place.getName("the")} was the #{places.filterBy("parentcd", place.parentcd).getRank(place, latest_col).toWords("ordinal", {dropFirst: true})} largest local authority in #{lookup[place.parentcd].getName("the")}, with a total population of #{place[latest_col].format()}. #{moreLess(place[latest_col] - place[prev_col], ["An increase", "A decrease", "No change"])} compared with #{prev_yr}.
+        p In #{latest_yr}, #{place.getName("the")} was #{places.filterBy("parentcd", place.parentcd).getRank(place, latest_col).describe("largest")} local authority in #{region.getName("the")}, with a population of #{place[latest_col].approx()}. Since #{years[0]}, its population has #{place[first_col].describeChange(place[latest_col], {texts: ["increased", "decreased", "stayed the same"]})}.
     
     section#chart-timeseries.Chart
         prop.chartType line-highlight
-        prop.title Population of local authorities #{lookup[place.parentcd].getName("in")}
+        prop.title Population of local authorities #{region.getName("in")}
         prop.subtitle Number of usual residents, #{years[0]}-#{latest_yr}
         prop.footer Source: Office for National Statistics
         prop.data= places.filterBy("parentcd", place.parentcd).toData({x: years, y: cols, z: "areanm"})
@@ -74,11 +80,11 @@ else
 
     section.Section#density
         prop.title Population density #{place.getName("in")}
-        p In #{latest_yr}, the population density #{place.getName("in")} was #{place["density"].format()} people per square kilometre, which was #{moreLess(place["density"] - lookup[place.parentcd]["density"], ["more than", "less than", "the same as"])} #{lookup[place.parentcd].getName("the")} (#{lookup[place.parentcd]["density"].format()}), and #{moreLess(place["density"] - lookup["K02000001"]["density"], ["more than", "less than", "the same as"])} the United Kingdom as a whole (#{lookup["K02000001"]["density"].format()}).
+        p In #{latest_yr}, the population density #{place.getName("in")} was #{place["density"].format()} people per square kilometre, which was #{place.density.compareTo(region.density, {texts: ["more than", "the same as", "less than"]})} #{region.getName("the")} (#{region.density.format()}), and #{place.density.compareTo(uk.density, {texts: ["more than", "the same as", "less than"]})} the United Kingdom as a whole (#{uk.density.format()}).
     
     section#chart-density.Chart
         prop.chartType bar-highlight
-        prop.title Densest local authorities #{lookup[place.parentcd].getName("in")}
+        prop.title Densest local authorities #{region.getName("in")}
         prop.subtitle Population density in people per sq km, #{latest_yr}
         prop.footer Source: Office for National Statistics
         prop.data= places.filterBy("parentcd", place.parentcd).top("density", 5, place).toData({x: "density", y: "areanm"})
@@ -88,11 +94,11 @@ else
 
     section.Section#age
         prop.title Median age #{place.getName("in")}
-        p In #{latest_yr}, the median age #{place.getName("in")} was #{place["age_med"].format(".0f")} years, which was #{moreLess(Math.round(place["age_med"]) - Math.round(lookup[place.parentcd]["age_med"]), ["older than", "younger than", "the same as"])} #{lookup[place.parentcd].getName("the")} (#{lookup[place.parentcd]["age_med"].format(".0f")} years), and #{moreLess(Math.round(place["age_med"]) - Math.round(lookup["K02000001"]["age_med"]), ["older than", "younger than", "the same as"])} the United Kingdom as a whole (#{lookup["K02000001"]["age_med"].format(".0f")} years).
+        p In #{latest_yr}, the median age #{place.getName("in")} was #{place["age_med"].format(".0f")} years, which was #{ageCompare(place.age_med, region.age_med)} #{region.getName("the")} (#{region.age_med.format(".0f")} years), and #{ageCompare(place.age_med, uk.age_med)} the United Kingdom as a whole (#{uk.age_med.format(".0f")} years).
 
     section#chart-age.Chart
         prop.chartType bar-highlight
-        prop.title Oldest local authorities #{lookup[place.parentcd].getName("in")}
+        prop.title Oldest local authorities #{region.getName("in")}
         prop.subtitle Median age in years, #{latest_yr}
         prop.footer Source: Office for National Statistics
         prop.data= places.filterBy("parentcd", place.parentcd).top("age_med", 5, place).toData({x: "age_med", y: "areanm"})
