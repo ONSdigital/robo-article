@@ -89,7 +89,7 @@
 <AnalyticsBanner {analyticsProps} />
 <PhaseBanner phase="beta" href="https://www.ons.gov.uk/feedback" />
 <Header />
-<Breadcrumb links={breadcrumb} theme="blue" background="#3b7a9e" />
+<Breadcrumb links={breadcrumb} theme="paleblue" />
 
 <Main>
 	{#each data.place.sections as section}
@@ -97,11 +97,10 @@
 			<!-- meta -->
 		{:else if section.type === "Header"}
 			<Hero
-				theme="blue"
+				theme="paleblue"
 				width="medium"
 				title={section.title}
 				lede={section.standfirst || ""}
-				background="#3b7a9e"
 				meta={data.meta.lastUpdated
 					? [{ key: "Last updated", value: formatDate(data.meta.lastUpdated) }]
 					: null}
