@@ -42,14 +42,15 @@ data.forEach((d) => (lookup[d.areacd] = d));
 
 // Cycle through LAs (and null for "no area selected")
 const written = new Set();
-let errors = 0;
+const failed = []; // Codes of the pages with Pug errors
 [...places, null].forEach((place) => {
 	// Render the PUG template for selected place
 	const data = renderJSON(template, place, places, lookup, pug);
-	if (data.error) errors++;
 
 	// Set the save path (default.json is when no area is selected)
-	const file = `${place ? place.areacd : "default"}.json`;
+	const code = place ? place.areacd : "default";
+	const file = `${code}.json`;
+	if (data.error) failed.push(code);
 	const path = `${dir}/${file}`;
 
 	// Write JSON output
@@ -88,9 +89,9 @@ files_to_copy.forEach((file) => {
 // Remove JSON files for areas that are no longer in the data (eg. after boundary changes).
 // This runs last, and only if every area rendered without a Pug error (renderJSON returns errors
 // rather than throwing them), so a broken template or CSV can't delete the previous output.
-if (errors || places.length === 0) {
+if (failed.length || places.length === 0) {
 	console.log(
-		`Kept old JSON files, as ${errors ? `${errors} of ${written.size} pages had Pug errors` : "no areas were found"}`
+		`Kept old JSON files, as ${failed.length ? "some pages failed" : "no areas were found"}`
 	);
 } else {
 	const redundant = readdirSync(dir).filter(
@@ -98,4 +99,12 @@ if (errors || places.length === 0) {
 	);
 	redundant.forEach((file) => unlinkSync(`${dir}/${file}`));
 	if (redundant.length) console.log(`Removed ${redundant.length} redundant JSON files`);
+}
+
+// Summary (the default page, for no area selected, counts as one page)
+console.log(`\nGenerated ${written.size - failed.length} of ${written.size} pages successfully`);
+if (failed.length) {
+	const more = failed.length > 5 ? `, and ${failed.length - 5} more` : "";
+	console.log(`${failed.length} failed with Pug errors: ${failed.slice(0, 5).join(", ")}${more}`);
+	process.exitCode = 1; // So that eg. `npm run build:data && npm run build` stops here
 }
