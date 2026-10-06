@@ -59,7 +59,7 @@
 
 	const analyticsProps = (() => {
 		const props = {};
-		for (const key in ["contentTitle", "releaseDate", "outputSeries", "contentType"]) {
+		for (const key of ["contentTitle", "releaseDate", "outputSeries", "contentType"]) {
 			if (data?.meta?.[key])
 				props[key] =
 					key === "releaseDate" ? data.meta[key].replaceAll("-", "") : data.meta[key];
