@@ -124,7 +124,7 @@
 						/>
 					</div>
 					<div style:padding="6px 0 3px" style:flex-shrink="1">
-						<Button type="sumbit" small>Select area</Button>
+						<Button type="submit" small>Select area</Button>
 					</div>
 				</form>
 			</Hero>
