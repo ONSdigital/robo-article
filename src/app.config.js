@@ -1,7 +1,7 @@
 // APP CONFIG
 
 // Base paths
-export const base_prod = "/robo-article"; // Directory on the ONS website
+export const base_prod = null; // Directory on the ONS website
 export const base_preview = "/robo-article"; // Directory on datavisweb preview server or Github Pages
 
 // Optional redirect URL for embedded landing page
