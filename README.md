@@ -4,7 +4,7 @@ A Svelte Kit template for creating semi-automated journalism (AKA "robo-journali
 
 The template is designed to use PUG templates and wide-format CSV files, as created within [this editor](https://github.com/ONSvisual/robo-editor).
 
-*Note: If you'd like to create semi-automated articles to embed within an iframe, please use this [alternative template](https://github.com/ONSvisual/robo-embed).*
+_Note: If you'd like to create semi-automated articles to embed within an iframe, please use this [alternative template](https://github.com/ONSvisual/robo-embed)._
 
 ## Getting started
 
@@ -43,7 +43,7 @@ If you're using a dataset that is not based around local authority data you'll n
 
 ```javascript
 // 3-letter ID prefixes to filter from CSV id column
-export const filter = ["E06","E07","E08","E09","N09","S12","W06"];
+export const filter = ["E06", "E07", "E08", "E09", "N09", "S12", "W06"];
 ```
 
 In the above case, you are also likely to want to change the **cols** parameter, which selects which columns to extract from the source CSV file for the purposes of powering the dropdown selector in the app. (The output CSV file can be found at **/static/data/places.csv**.)
@@ -53,7 +53,7 @@ In the above case, you are also likely to want to change the **cols** parameter,
 export const cols = ["areacd", "areanm", "parentcd"];
 ```
 
-*Note: You might want to specify additional data columns here in order to supply data for charts/maps that cover many (or all) rows in the data set.*
+_Note: You might want to specify additional data columns here in order to supply data for charts/maps that cover many (or all) rows in the data set._
 
 ## Customising the app
 
@@ -65,7 +65,7 @@ The best place to start editing is in the **/src/routes/+page.svelte** file.
 
 When you're ready to publish the app (either for preview or for production), you'll need to run the **build** command. This will build a static version of the app in the **/build** folder, which can be copied to wherever you want to host the app.
 
-*Note: The build consists of static HTML, CSS and Javascript files that do not require any back-end code to run.*
+_Note: The build consists of static HTML, CSS and Javascript files that do not require any back-end code to run._
 
 Before building the app, you'll need to customise the base path(s) in the **/src/app.config.js** file. This relates to the path on the server where you intend to place the contents of the **/build** folder. The default path is **/robo-article**. You can set two different paths, **base_prod** and **base_preview**, in case you need to deploy a preview of the app in a different location (eg. a secure/private server or Github Pages).
 

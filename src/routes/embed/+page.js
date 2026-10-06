@@ -1,5 +1,5 @@
 export async function load({ parent }) {
-  const { places } = await parent();
+	const { places } = await parent();
 
-  return {places};
+	return { places };
 }
