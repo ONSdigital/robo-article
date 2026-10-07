@@ -7,7 +7,7 @@ export const base_preview = "/robo-article"; // Directory on datavisweb preview 
 // Public address of the app, with no trailing slash. This is only used where the app needs a full,
 // absolute URL (share tags, embed codes and the sitemap). It doesn't affect the build or the paths
 // the app uses, which are set by base_prod and base_preview above.
-export const app_url = "https://www.ons.gov.uk/robo-article";
+export const app_url = "https://onsdigital.github.io/robo-article";
 
 // Optional redirect URL for embedded landing page
 export const redirect_url = null;
