@@ -1,8 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { base_prod } from "../src/app.config.js";
-
-const host = "https://www.ons.gov.uk";
+import { app_url } from "../src/app.config.js";
 
 function throughDirectory(dir) {
 	fs.readdirSync(dir).forEach((file) => {
@@ -27,7 +25,7 @@ let xml = `<?xml version="1.0" encoding="UTF-8"?>
 ${codes
 	.map(
 		(code) => `<url>
-<loc>${host}${base_prod}/${code ? `${code}/` : ""}</loc>
+<loc>${app_url}/${code ? `${code}/` : ""}</loc>
 <lastmod>${date}</lastmod>
 <changefreq>monthly</changefreq>
 <priority>1.0</priority>

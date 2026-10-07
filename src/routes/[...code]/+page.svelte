@@ -1,5 +1,5 @@
 <script>
-	import { asset, resolve } from "$app/paths";
+	import { resolve } from "$app/paths";
 	import { goto } from "$app/navigation";
 	import {
 		AnalyticsBanner,
@@ -21,7 +21,7 @@
 	import ChartActions from "$lib/layout/ChartActions.svelte";
 	import SummaryItem from "$lib/layout/SummaryItem.svelte";
 	import AreaLinks from "$lib/layout/AreaLinks.svelte";
-	import { breadcrumb } from "../../app.config";
+	import { breadcrumb, app_url } from "../../app.config";
 
 	let { data } = $props();
 
@@ -72,11 +72,8 @@
 	<title>{data?.meta?.title || ""}</title>
 	<meta property="og:title" content={data?.meta?.title || ""} />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://www.ons.gov.uk{resolve('/')}" />
-	<meta
-		property="og:image"
-		content="https://www.ons.gov.uk{asset(`/${data?.meta?.image || 'img/og.png'}`)}"
-	/>
+	<meta property="og:url" content="{app_url}/" />
+	<meta property="og:image" content="{app_url}/{data?.meta?.image || 'img/og.png'}" />
 	<meta
 		property="og:image:type"
 		content="image/{data?.meta?.image ? data.meta.image.split('.').slice(-1)[0] : 'png'}"
