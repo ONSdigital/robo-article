@@ -12,7 +12,7 @@ A SvelteKit 2 / Svelte 5 template for semi-automated ("robo-journalism") area ar
 npm run build:data      # render demo-data/ (or the source in app.config.js) into static/data/
 npm run dev             # dev server at localhost:5173
 npm run build           # production build to build/, then js-fix and gen-sitemap
-npm run build:preview   # build with base_preview (no js-fix or sitemap)
+npm run build:preview   # preview build: a single 404.html with base_preview (no js-fix or sitemap)
 npm run lint            # prettier --check
 npm run format          # prettier --write
 ```
@@ -32,10 +32,12 @@ Formatting (`.prettierrc`): tabs (width 4), print width 100, no trailing commas,
 - `[...code]`: the article. `+page.js` loads `/data/json/<code>.json` (or `default.json` for `/`). The area select calls `goto()`.
 - `embed`: one chart for pym.js iframes, chosen at runtime with `?area=<areacd>&chart=<section id>`. `ChartActions.svelte` builds the embed code that points here.
 - `landing`: an embeddable area picker that navigates `window.top` to the article.
-- `+layout.js` loads `places.csv` for every route and sets `prerender = true` and `trailingSlash = "always"`. `svelte.config.js` prerenders `/`, `/landing` and `/embed`, and the crawler finds every area page through `AreaLinks`.
+- `+layout.js` loads `places.csv` for every route, sets `trailingSlash = "always"`, and turns prerendering on (except in preview builds). `svelte.config.js` prerenders `/`, `/landing` and `/embed`, and the crawler finds every area page through `AreaLinks`.
 
-**Base paths.** `base_prod` and `base_preview` in `src/app.config.js` set `paths.base` (absolute, not relative), because the app builds absolute `https://www.ons.gov.uk/...` URLs for og tags, embed codes and the sitemap. In dev there's no base. Use `asset()` for files in `static/` and `resolve()` for routes, from `$app/paths` (not the deprecated `base`).
+**Base paths.** `base_prod` and `base_preview` in `src/app.config.js` set `paths.base`: a path builds absolute URLs, and `null` (the production default) builds relative ones, so the app can be deployed to any path. The URLs that must be absolute (the `og:` tags, embed codes and the sitemap) are built from `app_url` in the same file, which doesn't affect the build; don't build them from `resolve()`/`asset()`, which return relative paths (eg. `../`) in a relative build. In dev there's no base. Use `asset()` for files in `static/` and `resolve()` for routes, from `$app/paths` (not the deprecated `base`).
 
-**Post-build scripts.** `scripts/js-fix.js` prepends `//js` to every JS file in `build/_app` to avoid MIME type errors on the ONS servers, and `scripts/gen-sitemap.js` writes `build/sitemap.xml` from the prerendered area pages, using `base_prod`.
+**Preview builds.** `npm run build:preview` sets `PUBLIC_APP_ENV=preview`, which uses `base_preview` and turns prerendering off (in `src/routes/+layout.js`). The build is then a single `404.html` fallback page (adapter-static's `fallback` in `svelte.config.js`) that renders every route in the browser, plus the JS chunks, data and static files. `static/web.config` makes our internal IIS server use `404.html` for any unknown URL (and as the default document), so links to any route work. Don't add `export const prerender = true` to individual routes, or preview builds will prerender them again.
+
+**Post-build scripts.** `scripts/js-fix.js` prepends `//js` to every JS file in `build/_app` to avoid MIME type errors on the ONS servers, and `scripts/gen-sitemap.js` writes `build/sitemap.xml` from the prerendered area pages, using `app_url`.
 
 **Components.** The UI comes from `@onsvisual/svelte-components`, which is still written in Svelte 4 syntax. Its components dispatch events, so listen with `on:click` / `on:change` on them, while the app's own components and DOM elements use runes and `onclick`. Analytics settings, themes and demo-specific config (eg. the region list used by `AreaLinks` and the landing page) are in `src/lib/config.js`.
