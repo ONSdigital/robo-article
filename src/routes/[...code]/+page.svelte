@@ -72,7 +72,10 @@
 	<title>{data?.meta?.title || ""}</title>
 	<meta property="og:title" content={data?.meta?.title || ""} />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="{app_url}/" />
+	<meta
+		property="og:url"
+		content="{app_url}/{data.place.place ? `${data.place.place.areacd}/` : ''}"
+	/>
 	<meta property="og:image" content="{app_url}/{data?.meta?.image || 'img/og.png'}" />
 	<meta
 		property="og:image:type"
