@@ -3,20 +3,29 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<link href="/robo-article/_app/immutable/entry/start.mvqBSGRd.js" rel="modulepreload">
-		<link href="/robo-article/_app/immutable/chunks/DxJtoPtx.js" rel="modulepreload">
+		<script>
+			// Force browser to add a trailing slash before the app hydrates
+			(function () {
+				var path = location.pathname;
+				if (!/\/$/.test(path) && !/\.[^/]+$/.test(path)) {
+					location.replace(path + "/" + location.search + location.hash);
+				}
+			})();
+		</script>
+		<link href="/robo-article/_app/immutable/entry/start.FJDnDKjK.js" rel="modulepreload">
+		<link href="/robo-article/_app/immutable/chunks/CXqtwFlh.js" rel="modulepreload">
 		<link href="/robo-article/_app/immutable/chunks/DjwCQkKx.js" rel="modulepreload">
-		<link href="/robo-article/_app/immutable/chunks/B514lXFJ.js" rel="modulepreload">
-		<link href="/robo-article/_app/immutable/chunks/Dt1qK5aN.js" rel="modulepreload">
-		<link href="/robo-article/_app/immutable/entry/app.C0mpKb1l.js" rel="modulepreload">
+		<link href="/robo-article/_app/immutable/chunks/owXUVOYW.js" rel="modulepreload">
+		<link href="/robo-article/_app/immutable/chunks/BPH21FsQ.js" rel="modulepreload">
+		<link href="/robo-article/_app/immutable/entry/app.CXXC4MDc.js" rel="modulepreload">
 		<link href="/robo-article/_app/immutable/chunks/PPVm8Dsz.js" rel="modulepreload">
 		<link href="/robo-article/_app/immutable/chunks/Dgi7CuKw.js" rel="modulepreload">
 		<link href="/robo-article/_app/immutable/chunks/C_mj31Nq.js" rel="modulepreload">
 		<link href="/robo-article/_app/immutable/chunks/DkqCDUtR.js" rel="modulepreload">
 		<link href="/robo-article/_app/immutable/chunks/Dv-UxODz.js" rel="modulepreload">
 		<link href="/robo-article/_app/immutable/chunks/qxCykNi2.js" rel="modulepreload">
-		<link href="/robo-article/_app/immutable/nodes/0.BDA9Oguw.js" rel="modulepreload">
-		<link href="/robo-article/_app/immutable/chunks/CXCUuYhB.js" rel="modulepreload">
+		<link href="/robo-article/_app/immutable/nodes/0.Dno59q-i.js" rel="modulepreload">
+		<link href="/robo-article/_app/immutable/chunks/BTKnnm5g.js" rel="modulepreload">
 		
 		<link href="/robo-article/_app/immutable/assets/0.DL7Xpaz4.css" rel="stylesheet">
 	</head>
@@ -24,7 +33,7 @@
 		<div id="svelte">
 			<script>
 				{
-					__sveltekit_1lrdajb = {
+					__sveltekit_a4cdli = {
 						base: "/robo-article",
 						assets: "/robo-article"
 					};
@@ -32,8 +41,8 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("/robo-article/_app/immutable/entry/start.mvqBSGRd.js"),
-						import("/robo-article/_app/immutable/entry/app.C0mpKb1l.js")
+						import("/robo-article/_app/immutable/entry/start.FJDnDKjK.js"),
+						import("/robo-article/_app/immutable/entry/app.CXXC4MDc.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});
