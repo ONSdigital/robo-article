@@ -33,7 +33,8 @@
 		return csv;
 	}
 
-	async function downloadChart() {
+	async function downloadChart(e) {
+		e.preventDefault();
 		const chart = el?.parentElement?.firstElementChild;
 		console.log({ chart });
 		const result = await snapdom(chart, {
@@ -47,7 +48,8 @@
 		});
 	}
 
-	function downloadData() {
+	function downloadData(e) {
+		e.preventDefault();
 		let csv = section.title ? `"${section.title}"\n` : "";
 		csv += section.subtitle ? `"${section.subtitle}"\n` : "";
 		if (csv) csv += "\n";
@@ -90,8 +92,12 @@
 			</Li>
 			<Li>
 				<Icon type="code" marginRight />
-				<a href="#0" onclick={() => (showEmbed = !showEmbed)}
-					>{showEmbed ? "Hide embed code" : "Show embed code"}</a
+				<a
+					href="#0"
+					onclick={(e) => {
+						e.preventDefault();
+						showEmbed = !showEmbed;
+					}}>{showEmbed ? "Hide embed code" : "Show embed code"}</a
 				>
 			</Li>
 		</List>
