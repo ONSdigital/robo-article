@@ -1,5 +1,5 @@
 <script>
-	import html2canvas from "html2canvas";
+	import { snapdom } from "@zumer/snapdom";
 	import { app_url } from "../../app.config.js";
 	import { Button, Textarea } from "@onsvisual/svelte-components";
 
@@ -34,14 +34,16 @@
 	}
 
 	async function downloadChart() {
-		const chart = el.parentElement.firstChild;
-		const canvas = await html2canvas(chart);
-		const base64 = canvas.toDataURL();
-		const a = document.createElement("a");
-
-		a.href = base64;
-		a.download = `${place.areanm.replaceAll(" ", "-")}_${section.id}.png`;
-		a.click();
+		const chart = el?.parentElement?.firstElementChild;
+		const result = await snapdom(chart, {
+			embedFonts: true,
+			backgroundColor: "white",
+			scale: 2
+		});
+		await result.download({
+			format: "png",
+			filename: `${place.areanm.replaceAll(" ", "-")}_${section.id}.png`
+		});
 	}
 
 	function downloadData() {
