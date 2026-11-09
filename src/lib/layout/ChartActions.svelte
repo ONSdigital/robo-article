@@ -1,7 +1,7 @@
 <script>
 	import { snapdom } from "@zumer/snapdom";
 	import { app_url } from "../../app.config.js";
-	import { Button, Textarea } from "@onsvisual/svelte-components";
+	import { Button, Textarea, Details, List, Li, Icon } from "@onsvisual/svelte-components";
 
 	let { place, section } = $props();
 
@@ -35,6 +35,7 @@
 
 	async function downloadChart() {
 		const chart = el?.parentElement?.firstElementChild;
+		console.log({ chart });
 		const result = await snapdom(chart, {
 			embedFonts: true,
 			backgroundColor: "white",
@@ -77,31 +78,39 @@
 </script>
 
 <div class="chart-actions" bind:this={el}>
-	<Button variant="secondary" small on:click={downloadChart}>Download chart</Button>
-	<Button variant="secondary" small on:click={downloadData}>Download data</Button>
-	<Button variant="secondary" small on:click={() => (showEmbed = !showEmbed)}
-		>{showEmbed ? "Hide embed code" : "Show embed code"}</Button
-	>
-	{#if showEmbed}
-		<Textarea value={embedCode} rows={4} hideLabel />
-		<Button small on:click={() => clip(embedCode, "Copied to clipboard!")}
-			>Copy to clipboard</Button
-		>
-	{/if}
+	<Details title="Download and use this chart">
+		<List mode="bare">
+			<Li>
+				<Icon type="download" marginRight />
+				<a href="#0" onclick={downloadChart}>Download chart (PNG)</a>
+			</Li>
+			<Li>
+				<Icon type="download" marginRight />
+				<a href="#0" onclick={downloadData}>Download data (CSV)</a>
+			</Li>
+			<Li>
+				<Icon type="code" marginRight />
+				<a href="#0" onclick={() => (showEmbed = !showEmbed)}
+					>{showEmbed ? "Hide embed code" : "Show embed code"}</a
+				>
+			</Li>
+		</List>
+		{#if showEmbed}
+			<Textarea value={embedCode} rows={4} readonly hideLabel />
+			<Button small on:click={() => clip(embedCode, "Copied to clipboard!")}
+				>Copy to clipboard</Button
+			>
+		{/if}
+	</Details>
 </div>
 
 <style>
 	.chart-actions {
-		min-height: auto !important;
+		display: block;
+		width: 100%;
+		margin-bottom: 12px;
 	}
 	.chart-actions :global(.ons-btn) {
-		margin-bottom: 10px;
-		margin-top: 8px;
-	}
-	.chart-actions :global(.ons-btn--secondary) {
-		margin-top: 0;
-	}
-	.chart-actions :global(.ons-btn + .ons-btn) {
-		margin-left: 0 !important;
+		margin: 4px 0 8px;
 	}
 </style>

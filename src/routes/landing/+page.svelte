@@ -12,7 +12,8 @@
 		Select,
 		Button,
 		Details,
-		Container
+		Container,
+		Divider
 	} from "@onsvisual/svelte-components";
 
 	let { data } = $props();
