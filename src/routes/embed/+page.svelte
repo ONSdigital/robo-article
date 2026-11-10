@@ -31,7 +31,7 @@
 
 <Embed>
 	{#if section}
-		<Grid width="narrow" colwidth="full">
+		<Grid width="narrow" colWidth="full">
 			<div class="chart-outer">
 				<Chart {section} />
 				{#if section.note}

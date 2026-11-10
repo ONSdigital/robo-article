@@ -133,7 +133,7 @@
 				{@html section.content || ""}
 			</Highlight>
 		{:else if section.type === "Chart" && section.chartType}
-			<Grid width="narrow" colwidth="full">
+			<Grid width="narrow" colWidth="full">
 				<div class="chart-outer">
 					<Chart {section} />
 					{#if section.note}
@@ -144,7 +144,7 @@
 			</Grid>
 		{:else if section.type === "Summary"}
 			<Section id={section.id} title={section.title} marginTop marginBottom={false} />
-			<Grid cls="ons-u-mt-l" width="narrow" colwidth="full" height={100}>
+			<Grid cls="ons-u-mt-l" width="narrow" colWidth="full" height={100}>
 				{#each section.sections as sub}
 					<SummaryItem section={sub} />
 				{/each}
