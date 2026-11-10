@@ -36,7 +36,6 @@
 	async function downloadChart(e) {
 		e.preventDefault();
 		const chart = el?.parentElement?.firstElementChild;
-		console.log({ chart });
 		const result = await snapdom(chart, {
 			embedFonts: true,
 			backgroundColor: "white",
