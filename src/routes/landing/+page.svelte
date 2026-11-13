@@ -18,7 +18,7 @@
 
 	let { data } = $props();
 
-	let selected = $state();
+	let selected = $state(null); // Not undefined: Select's value can't be bound to undefined
 
 	async function doSelect() {
 		const code = selected?.areacd;

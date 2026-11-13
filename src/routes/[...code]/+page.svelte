@@ -25,8 +25,7 @@
 
 	let { data } = $props();
 
-	let selected = $state();
-	let clearInput = $state();
+	let selected = $state(null); // Not undefined: Select's value can't be bound to undefined
 
 	function formatDate(str) {
 		const date = new Date(str);
@@ -47,8 +46,7 @@
 				areaCode: newplace.areacd,
 				areaName: newplace.areanm
 			});
-			selected = null;
-			clearInput();
+			selected = null; // Also clears the search box
 			goto(resolve(`/${code}/`));
 		}
 	}
@@ -119,7 +117,6 @@
 							labelKey="areanm"
 							options={data.places}
 							bind:value={selected}
-							bind:clearInput
 							placeholder="Type an area name..."
 						/>
 					</div>
